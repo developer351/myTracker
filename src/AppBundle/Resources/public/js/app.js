@@ -1,3 +1,4 @@
+Vue.use(VueResource);
 var clock = new Vue({
     el: '#clock',
     delimiters: ['${', '}'],
@@ -37,27 +38,29 @@ function zeroPadding(num, digit) {
 var startWorkDay = new Vue({
     el: '#startDay',
     data: {
-        name: 'Vue.js'
+        debug: true,
+        weather: []
     },
-    // определяйте методы в объекте `methods`
     methods: {
-        startDay: function (event) {
-            fetch('https://jsonplaceholder.typicode.com/posts/1')
-                .then((response) => {
-                if(response.ok) {
-                return response.json();
-            }
+        startDay: function () {
+            this.$http.get('/startWorkDay', {params:  {page: 'page'}} ).then(
+                function (response) {
+                    //look into the routes file and format your response
+                    this.$set('items', response.data.data.data);
+                    this.$set('pagination', response.data.pagination);
 
-                throw new Error('Network response was not ok');
-            })
-            .then((json) => {
-                    this.posts.push({
-                    title: json.title,
-                    body: json.body
+                }, function (error) {
+                    // handle error
                 });
-            })
-            .catch((error) => {
-                    console.log(error);
+        },
+        stopDay: function () {
+            this.$http.get('/stopWorkDay').then((resp) => {
+                console.log(JSON.stringify(resp.data));
+            });
+        },
+        coffeeBreak: function () {
+            this.$http.get('/coffeeBreak').then((resp) => {
+                console.log(JSON.stringify(resp.data));
             });
         }
     }

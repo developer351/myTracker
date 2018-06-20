@@ -42,8 +42,8 @@
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group mr-2"  id="startDay">
                         <button type="button" v-on:click="startDay" class="btn btn-success">Пришел на работу</button>
-                        <button type="button" class="btn btn-danger">Ушел с работы</button>
-                        <button type="button" class="btn btn-warning">Перерыв</button>
+                        <button type="button" v-on:click="stopDay" class="btn btn-danger">Ушел с работы</button>
+                        <button type="button" v-on:click="coffeeBreak" class="btn btn-warning">Перерыв</button>
                     </div>
                 </div>
             </div>
