@@ -548,8 +548,8 @@
     font-family: sans-serif;
     text-align: center;
     position: absolute;
-    left: 22%;
-    top: 7%;
+    left: 35%;
+    top: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     font-size: 21px;
@@ -585,4 +585,12 @@
 }
 .task-timer {
     float: left;
+}
+.disabled {
+    opacity: 0.35;
+}
+.start-info {
+    margin: 8px;
+    font-size: 16px;
+    font-weight: bold;
 }

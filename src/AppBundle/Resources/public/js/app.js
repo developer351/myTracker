@@ -43,12 +43,14 @@ var startWorkDay = new Vue({
     },
     methods: {
         startDay: function () {
-            this.$http.get('/startWorkDay', {params:  {page: 'page'}} ).then(
-                function (response) {
-                    //look into the routes file and format your response
-                    this.$set('items', response.data.data.data);
-                    this.$set('pagination', response.data.pagination);
+            var cd = new Date();
+            var time = cd.getHours() + ':' + cd.getMinutes() + ':' + cd.getSeconds();
 
+            this.$http.get('/startWorkDay', {params:  {time: time}} ).then(
+                function (response) {
+                    if(response.data.success === 'True') {
+                        location.href = '/';
+                    }
                 }, function (error) {
                     // handle error
                 });
@@ -59,9 +61,7 @@ var startWorkDay = new Vue({
             });
         },
         coffeeBreak: function () {
-            this.$http.get('/coffeeBreak').then((resp) => {
-                console.log(JSON.stringify(resp.data));
-            });
+            alert("А хрен! жди) скоро будет =)");
         }
     }
 });

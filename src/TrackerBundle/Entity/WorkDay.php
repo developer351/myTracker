@@ -31,13 +31,6 @@ class WorkDay
     /**
      * @var int
      *
-     * @ORM\Column(name="startedWork", type="integer")
-     */
-    private $startedWork;
-
-    /**
-     * @var int
-     *
      * @ORM\Column(name="UserId", type="integer")
      */
     private $userId;
@@ -47,21 +40,28 @@ class WorkDay
      *
      * @ORM\Column(name="startFrom", type="datetime")
      */
-    private $startFrom;
+    private $startFrom = 'now()';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="coffeeBreak", type="datetime")
+     * @ORM\Column(name="coffeeBreak", type="string", nullable=true)
      */
     private $coffeeBreak;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="goHome", type="datetime")
+     * @ORM\Column(name="goHome", type="datetime",nullable=true)
      */
     private $goHome;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="isWorking", type="integer")
+     */
+    private $isWorking;
 
 
     /**
@@ -98,29 +98,6 @@ class WorkDay
         return $this->date;
     }
 
-    /**
-     * Set startedWork
-     *
-     * @param integer $startedWork
-     *
-     * @return WorkDay
-     */
-    public function setStartedWork($startedWork)
-    {
-        $this->startedWork = $startedWork;
-
-        return $this;
-    }
-
-    /**
-     * Get startedWork
-     *
-     * @return int
-     */
-    public function getStartedWork()
-    {
-        return $this->startedWork;
-    }
 
     /**
      * Set userId
@@ -216,6 +193,22 @@ class WorkDay
     public function getGoHome()
     {
         return $this->goHome;
+    }
+
+    /**
+     * @return int
+     */
+    public function getisWorking()
+    {
+        return $this->isWorking;
+    }
+
+    /**
+     * @param int $isWorking
+     */
+    public function setIsWorking($isWorking)
+    {
+        $this->isWorking = $isWorking;
     }
 }
 
