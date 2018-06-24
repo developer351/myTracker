@@ -2,12 +2,12 @@
 
 namespace TrackerBundle\Controller;
 
+use DateTimeZone;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\DateTime;
 use TrackerBundle\Entity\WorkDay;
 use Symfony\Component\Security\Core\User\User;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -20,50 +20,86 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        $workDay = $this->getDoctrine()->getManager()->getRepository(WorkDay::class)->findBy(['userId' => 1]);
-        foreach ($workDay as $item) {
-            $startFrom = $item->getStartFrom();
+
+        $isWorking = 0;
+        $startFrom = null;
+        $stopWork = null;
+        $workDayId = null;
+        $today = strtotime(date("Y-m-d"));
+
+        $workDay = $this->getDoctrine()->getManager()->getRepository(WorkDay::class)->findBy(['date' => $today, 'userId' => 1]);
+
+        if(!empty($workDay)) {
+            foreach ($workDay as $item) {
+                $startFrom = date("H:i:s", $item->getStartFrom());
+                $isWorking = $item->getIsWorking();
+                $workDayId = $item->getId();
+                $stopWork = date("H:i:s", $item->getStopWork());
+
+                $countWorkDay = ($item->getStartFrom()- $item->getStopWork());
+            }
+
         }
 
-        return $this->render('@Tracker/Default/index.html.twig',[
+        return $this->render('@Tracker/Default/index.html.twig', [
             'workDay' => $workDay,
-            'startFrom' => $startFrom->format('Y-m-d H:i:s'),
+            'startFrom' => $startFrom,
+            'isWorking' => $isWorking,
+            'workDayId' => $workDayId,
+            'stopWork' => $stopWork,
+            'countWorkHour' => date("H:i", $countWorkDay),
         ]);
+
     }
     /**
      * @Route("/startWorkDay", name="startWorkDay")
      */
-    public function startWorkDayAction(Request $request)
+    public function startWorkDayAction()
     {
 
         $usr= $this->get('security.token_storage')->getToken()->getUser();
         $em = $this->get('doctrine')->getManager();
+        $today = strtotime(date("Y-m-d"));
+        $startTime = strtotime(date("H:i:s"));
+        $getWorkDayForCurrentUser = $em->getRepository(WorkDay::class)->findBy(['date' => $today,'userId' => $usr->getId(),'isWorking' => 1]);
 
-        $getWorkDayForCurrentUser = $em->getRepository(WorkDay::class)->findBy(['userId' => $usr->getId(),'isWorking' => 1]);
-        foreach ($getWorkDayForCurrentUser as $item) {
-            if ($item->getIsWorking() == 0) {
+            if(empty($getWorkDayForCurrentUser))  {
                 $workDay = new WorkDay();
-                $workDay->setDate(new \DateTime());
+
+                $workDay->setDate($today);
                 $workDay->setUserId($usr->getId());
-                $workDay->setStartFrom(new \DateTime());
+                $workDay->setStartFrom($startTime);
                 $workDay->setIsWorking(1); //@todo replace to constant
 
                 $em->persist($workDay);
                 $em->flush();
                 return new JsonResponse(['success' => 'True']);
-            } else {
-                exit('cant start work day');
             }
-        }
+
 
     }
 
     /**
      * @Route("/stopWorkDay", name="stopWorkDay")
      */
-    public function stopWorkDayAction()
+    public function stopWorkDayAction(Request $request)
     {
-        echo "ok";
+        $em = $this->get('doctrine')->getManager();
+        $id = $request->get('id');
+        $stopTime = strtotime(date("H:i:s"));
+        $workDay = $em->getRepository(WorkDay::class)->find($id);
+
+        if(!empty($workDay)) {
+
+            $workDay->setStopWork($stopTime);
+            $workDay->setIsWorking(false); //@todo replace to constant
+
+            $em->persist($workDay);
+            $em->flush();
+
+            return new JsonResponse(['success' => 'True']);
+        }
+
     }
 
     /**

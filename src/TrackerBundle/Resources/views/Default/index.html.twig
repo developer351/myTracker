@@ -41,13 +41,15 @@
 
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group mr-2"  id="startDay">
-                        <button type="button" v-on:click="startDay" class="btn btn-success">Пришел на работу</button>
-                        <button type="button" v-on:click="stopDay" class="btn btn-danger">Ушел с работы</button>
-                        <button type="button" v-on:click="coffeeBreak" class="btn btn-warning">Перерыв</button>
+                        <button type="button" v-on:click="startDay" {{ isWorking == 0 ? ' ' : 'disabled' }} class="btn btn-success {{ isWorking == 0 ? ' ' : 'disabled' }}">Пришел на работу</button>
+                        <button type="button" id="stopWork" data-id="{{ workDayId }}" v-on:click="stopDay" {{ isWorking == 1 ? ' ' : 'disabled' }} class="btn btn-danger {{ isWorking == 1 ? ' ' : 'disabled' }}">Ушел с работы</button>
+                        {#<button type="button" v-on:click="coffeeBreak" class="btn btn-warning">Перерыв</button>#}
                     </div>
 
                     <div class="start-info">
                    <span> Начало рабочего дня: </span><span style="color: #1e34d2; text-decoration: underline;">{{ startFrom }}</span>
+                   <span> Завершение рабочего дня: </span><span style="color: #1e34d2; text-decoration: underline;">{{ stopWork }}</span>
+                   <span> часов отработано: </span><span style="color: #1e34d2; text-decoration: underline;">{{ countWorkHour }}</span>
                     </div>
                 </div>
                 <div>
@@ -98,7 +100,7 @@
             {% else %}
                 <h2 style="margin: 50px;">Нужно начать рабочий день</h2>
             {% endif %}
-            <h2>План задач:</h2>
+            <h2>История:</h2>
             <div class="table-responsive {{ workDay is not empty ? ' ' : 'disabled' }}">
                 <table class="table table-striped table-sm">
                     <thead>

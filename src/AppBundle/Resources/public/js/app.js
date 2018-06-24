@@ -56,8 +56,12 @@ var startWorkDay = new Vue({
                 });
         },
         stopDay: function () {
-            this.$http.get('/stopWorkDay').then((resp) => {
-                console.log(JSON.stringify(resp.data));
+            var el = document.querySelector('#stopWork');
+
+            this.$http.get('/stopWorkDay/',{params:  {id: el.getAttribute('data-id')}}).then((resp) => {
+                if(response.data.success === 'True') {
+                location.href = '/';
+                }
             });
         },
         coffeeBreak: function () {
