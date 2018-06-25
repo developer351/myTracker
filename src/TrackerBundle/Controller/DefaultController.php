@@ -25,6 +25,7 @@ class DefaultController extends Controller
         $startFrom = null;
         $stopWork = null;
         $workDayId = null;
+        $countWorkDay = null;
         $today = strtotime(date("Y-m-d"));
 
         $workDay = $this->getDoctrine()->getManager()->getRepository(WorkDay::class)->findBy(['date' => $today, 'userId' => 1]);
@@ -34,9 +35,9 @@ class DefaultController extends Controller
                 $startFrom = date("H:i:s", $item->getStartFrom());
                 $isWorking = $item->getIsWorking();
                 $workDayId = $item->getId();
-                $stopWork = date("H:i:s", $item->getStopWork());
+                $stopWork = ($item->getStopWork() ? date("H:i:s", $item->getStopWork()) : null);
 
-                $countWorkDay = ($item->getStartFrom()- $item->getStopWork());
+                $countWorkDay =  ($item->getStopWork() ? ($item->getStartFrom()- $item->getStopWork()) : null );
             }
 
         }
@@ -47,7 +48,7 @@ class DefaultController extends Controller
             'isWorking' => $isWorking,
             'workDayId' => $workDayId,
             'stopWork' => $stopWork,
-            'countWorkHour' => date("H:i", $countWorkDay),
+            'countWorkHour' => ($countWorkDay ? date("H:i", $countWorkDay) : 0 ),
         ]);
 
     }

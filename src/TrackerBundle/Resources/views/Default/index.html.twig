@@ -47,9 +47,9 @@
                     </div>
 
                     <div class="start-info">
-                   <span> Начало рабочего дня: </span><span style="color: #1e34d2; text-decoration: underline;">{{ startFrom }}</span>
-                   <span> Завершение рабочего дня: </span><span style="color: #1e34d2; text-decoration: underline;">{{ stopWork }}</span>
-                   <span> часов отработано: </span><span style="color: #1e34d2; text-decoration: underline;">{{ countWorkHour }}</span>
+                   {% if startFrom != null %}<span> Начало рабочего дня: </span><span style="color: #1e34d2; text-decoration: underline;">{{ startFrom }}</span>{% endif %}
+                    {% if stopWork != null %}<span> Завершение рабочего дня: </span><span style="color: #1e34d2; text-decoration: underline;">{{ stopWork }}</span>{% endif %}
+                    {% if countWorkHour != null %}<span> часов отработано: </span><span style="color: #1e34d2; text-decoration: underline;">{{ countWorkHour }}</span>{% endif %}
                     </div>
                 </div>
                 <div>
