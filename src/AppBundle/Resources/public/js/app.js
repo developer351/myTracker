@@ -53,16 +53,20 @@ var startWorkDay = new Vue({
                     }
                 }, function (error) {
                     // handle error
-                });
+            });
         },
         stopDay: function () {
             var el = document.querySelector('#stopWork');
 
-            this.$http.get('/stopWorkDay/',{params:  {id: el.getAttribute('data-id')}}).then((resp) => {
-                if(response.data.success === 'True') {
-                location.href = '/';
-                }
+            this.$http.get('/stopWorkDay', {params:  {id: el.getAttribute('data-id')}} ).then(
+                function (response) {
+                    if(response.data.success === 'True') {
+                        location.href = '/';
+                    }
+                }, function (error) {
+                    // handle error
             });
+
         },
         coffeeBreak: function () {
             alert("А хрен! жди) скоро будет =)");
